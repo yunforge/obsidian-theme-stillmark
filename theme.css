@@ -1,0 +1,1257 @@
+/* Stillmark for Obsidian — ported from the SiYuan theme of the same name.
+   White-first light mode, charcoal dark mode, low-saturation berry and
+   focus-blue accents, hairline-separated neutral chrome. CSS only. */
+
+/* @settings
+name: Stillmark
+id: stillmark
+settings:
+    - id: stillmark-accent-heading
+      title: Accent
+      title.zh: 强调色
+      type: heading
+      level: 2
+      collapsed: true
+    - id: accent-h
+      title: Accent hue (berry = 348, default)
+      title.zh: 强调色色相（默认莓红 348）
+      type: variable-number
+      default: 348
+    - id: accent-s
+      title: Accent saturation
+      title.zh: 强调色饱和度
+      type: variable-number
+      default: 52
+      format: "%"
+    - id: accent-l
+      title: Accent lightness
+      title.zh: 强调色亮度
+      type: variable-number
+      default: 41
+      format: "%"
+*/
+
+body {
+    --accent-h: 348;
+    --accent-s: 52%;
+    --accent-l: 41%;
+
+    /* ---------- Stillmark palette: light ---------- */
+    --stillmark-accent: #9f3345;
+    --stillmark-accent-soft: rgba(159, 51, 69, .09);
+    --stillmark-accent-softer: rgba(159, 51, 69, .13);
+    --stillmark-focus: #2f6fa9;
+
+    /* Inline code keeps the muted berry chip without a border. */
+    --stillmark-inline-code-background: #f4eeee;
+    --stillmark-inline-code-color: #8a3f50;
+
+    /* Code blocks read as flat in-prose panels. */
+    --stillmark-code-background: #f8f9f8;
+    --stillmark-code-border: #e4e7e4;
+    --stillmark-code-border-focus: #c98b96;
+    --stillmark-code-focus-ring: rgba(159, 51, 69, .09);
+    --stillmark-code-toolbar: #737974;
+    --stillmark-code-toolbar-hover: rgba(36, 39, 36, .06);
+    --stillmark-code-scrollbar: #c6cad1;
+    --stillmark-code-language: #925463;
+
+    /* Quotes use a berry rule and upright warm-gray prose. */
+    --stillmark-quote-rule: #bd7181;
+    --stillmark-quote-color: #665d5f;
+
+    /* Callouts are neutral panels; only icon chips and titles carry type color. */
+    --stillmark-callout-background: #fbfbfa;
+    --stillmark-callout-border: #e1e4e1;
+    --stillmark-callout-content: #4d524e;
+    --stillmark-callout-note-soft: #eef3f6;
+    --stillmark-callout-warning-soft: #f8f1e4;
+    --stillmark-callout-tip-soft: #edf4f0;
+    --stillmark-callout-important-soft: #f8e9ec;
+    --stillmark-callout-caution-soft: #faece9;
+
+    /* Tables stay compact hairline grids. */
+    --stillmark-table-surface: #ffffff;
+    --stillmark-table-header-background: #f7f8f6;
+    --stillmark-table-header-color: #4c514d;
+    --stillmark-table-outline: #dde1dd;
+    --stillmark-table-row-divider: #e5e8e4;
+    --stillmark-table-column-divider: #eef0ed;
+    --stillmark-table-row-alt: rgba(36, 39, 36, .018);
+    --stillmark-table-row-hover: rgba(36, 39, 36, .045);
+    --stillmark-table-code-background: rgba(159, 51, 69, .055);
+    --stillmark-table-code-color: #7c4652;
+
+    /* Shell layers: paper center, muted workbench panels, hairline seams. */
+    --stillmark-shell-background: #f1f3f0;
+    --stillmark-shell-panel: #f7f8f6;
+    --stillmark-shell-panel-muted: #f3f4f2;
+    --stillmark-shell-overlay: #ffffff;
+    --stillmark-shell-border: #e0e3df;
+    --stillmark-shell-hover: rgba(36, 39, 36, .055);
+    --stillmark-shell-shadow: 0 12px 34px rgba(29, 31, 28, .14), 0 1px 3px rgba(29, 31, 28, .08);
+
+    /* Search workspace states. */
+    --stillmark-search-scrim: rgba(30, 33, 30, .42);
+    --stillmark-search-match-background: rgba(159, 51, 69, .13);
+    --stillmark-search-match-color: #8e293a;
+
+    /* Links: explicit blue with an always-visible hairline underline. */
+    --stillmark-link: #315f92;
+    --stillmark-link-hover: #244f7d;
+    --stillmark-link-underline: rgba(49, 95, 146, .5);
+    --stillmark-link-underline-hover: rgba(36, 79, 125, .92);
+
+    /* Syntax palette: red / blue / violet / amber, never teal prose. */
+    --stillmark-syntax-text: #2e3137;
+    --stillmark-syntax-comment: #687078;
+    --stillmark-syntax-keyword: #a62d4b;
+    --stillmark-syntax-title: #2f6095;
+    --stillmark-syntax-string: #8b592b;
+    --stillmark-syntax-number: #714b9c;
+    --stillmark-syntax-attribute: #70509a;
+    --stillmark-syntax-meta: #3b6d88;
+    --stillmark-syntax-operator: #555c63;
+    --stillmark-syntax-selection: #dce7f2;
+
+    /* Highlight (==mark==) uses the warm paper amber from SiYuan. */
+    --stillmark-highlight-background: #f1dda2;
+    --stillmark-highlight-color: #38362f;
+
+    /* Tree icon: quiet document glyph with a berry text line. */
+    --stillmark-tree-document-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 18 18'%3E%3Cpath d='M4 2.5h6.25L14 6.25v9.25H4zM10.25 2.5v3.75H14M6.75 12h4.5' fill='none' stroke='%23626863' stroke-width='1.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='M6.75 9h4.5' fill='none' stroke='%23ad2e40' stroke-width='1.4' stroke-linecap='round'/%3E%3C/svg%3E");
+
+    /* External-link globe marker (theme-only fallback, no third-party favicon service). */
+    --stillmark-link-favicon-fallback: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cg fill='none' stroke='%236f7780' stroke-width='1.25'%3E%3Ccircle cx='8' cy='8' r='6.25'/%3E%3Cpath d='M1.75 8h12.5M8 1.75c1.7 1.65 2.65 3.8 2.65 6.25S9.7 12.6 8 14.25C6.3 12.6 5.35 10.45 5.35 8S6.3 3.4 8 1.75Z'/%3E%3C/g%3E%3C/svg%3E");
+
+    /* ---------- Obsidian base mappings: light ---------- */
+    --color-red: #b34f45;
+    --color-orange: #a26a2a;
+    --color-yellow: #8a642e;
+    --color-green: #55765c;
+    --color-cyan: #365e69;
+    --color-blue: #2f6fa9;
+    --color-purple: #70509a;
+    --color-pink: #9f3345;
+
+    --color-base-00: #ffffff;
+    --color-base-05: #fcfcfb;
+    --color-base-10: #fafaf9;
+    --color-base-20: #f6f7f5;
+    --color-base-25: #f1f3f0;
+    --color-base-30: #e4e7e3;
+    --color-base-35: #dde1dd;
+    --color-base-40: #c5c9c4;
+    --color-base-50: #aaa99f;
+    --color-base-60: #7d827d;
+    --color-base-70: #5d625d;
+    --color-base-100: #242724;
+
+    /* Shell mapping */
+    --titlebar-background: var(--stillmark-shell-background);
+    --titlebar-background-focused: var(--stillmark-shell-background);
+    --tab-container-background: var(--stillmark-shell-panel-muted);
+    --sidebar-tab-container-background: var(--stillmark-shell-panel-muted);
+    --tab-outline-color: var(--stillmark-shell-border);
+    --ribbon-background: var(--stillmark-shell-background);
+    --ribbon-background-collapsed: var(--stillmark-shell-background);
+    --status-bar-background: var(--stillmark-shell-background);
+    --status-bar-border-color: var(--stillmark-shell-border);
+    --status-bar-radius: 0;
+    --status-bar-border-width: 1px 0 0 0;
+    --divider-color: var(--stillmark-shell-border);
+    --background-secondary: var(--stillmark-shell-panel);
+    --background-secondary-alt: var(--stillmark-shell-panel-muted);
+    --titlebar-text-color: var(--text-faint);
+    --titlebar-text-color-focused: var(--text-muted);
+
+    /* Menus and modals float on white overlays. */
+    --menu-background: var(--stillmark-shell-overlay);
+    --menu-border-color: var(--stillmark-shell-border);
+    --menu-shadow: var(--stillmark-shell-shadow);
+    --modal-background: var(--stillmark-shell-overlay);
+    --modal-border-color: var(--stillmark-shell-border);
+    --modal-shadow: var(--stillmark-shell-shadow);
+    --prompt-background: var(--stillmark-shell-overlay);
+    --prompt-border-color: var(--stillmark-shell-border);
+    --workspace-background-translucent: rgba(241, 243, 240, .6);
+    --background-modifier-message: #343733;
+    --notice-background: #343733;
+    --notice-color: #f4f2ec;
+
+    /* Editors and chrome */
+    --blockquote-border-thickness: 2px;
+    --blockquote-border-color: var(--stillmark-quote-rule);
+    --blockquote-color: var(--stillmark-quote-color);
+    --blockquote-font-style: normal;
+    --blockquote-background-color: transparent;
+
+    --code-background: var(--stillmark-code-background);
+    --code-normal: var(--stillmark-syntax-text);
+    --code-radius: 8px;
+    --code-border-width: 1px;
+    --code-border-color: var(--stillmark-code-border);
+    --code-comment: var(--stillmark-syntax-comment);
+    --code-function: var(--stillmark-syntax-title);
+    --code-important: var(--stillmark-syntax-keyword);
+    --code-keyword: var(--stillmark-syntax-keyword);
+    --code-operator: var(--stillmark-syntax-operator);
+    --code-property: var(--stillmark-syntax-attribute);
+    --code-punctuation: var(--stillmark-syntax-operator);
+    --code-string: var(--stillmark-syntax-string);
+    --code-tag: var(--stillmark-syntax-meta);
+    --code-value: var(--stillmark-syntax-number);
+
+    --highlight-mix-blend-mode: darken;
+    --text-highlight-bg: var(--stillmark-highlight-background);
+
+    --link-color: var(--stillmark-link);
+    --link-color-hover: var(--stillmark-link-hover);
+    --link-external-color: var(--stillmark-link);
+    --link-external-color-hover: var(--stillmark-link-hover);
+    --link-decoration: underline;
+    --link-decoration-hover: underline;
+    --link-external-decoration: underline;
+    --link-external-decoration-hover: underline;
+    --link-unresolved-color: var(--stillmark-link);
+    --link-unresolved-decoration-style: dashed;
+    --link-unresolved-opacity: .7;
+
+    --tag-color: var(--stillmark-focus);
+    --tag-color-hover: var(--stillmark-focus);
+    --tag-background: color-mix(in srgb, var(--stillmark-focus) 8%, transparent);
+    --tag-background-hover: color-mix(in srgb, var(--stillmark-focus) 13%, transparent);
+    --tag-border-color: color-mix(in srgb, var(--stillmark-focus) 24%, var(--stillmark-shell-border));
+    --tag-border-color-hover: color-mix(in srgb, var(--stillmark-focus) 42%, var(--stillmark-shell-border));
+    --tag-border-width: 1px;
+    --tag-radius: 999px;
+    --tag-weight: 500;
+
+    --nav-item-color: var(--text-muted);
+    --nav-item-color-hover: var(--text-normal);
+    --nav-item-color-active: var(--text-normal);
+    --nav-item-background-hover: var(--stillmark-shell-hover);
+    --nav-item-background-active: var(--stillmark-shell-hover);
+    --nav-item-background-selected: var(--stillmark-accent-soft);
+    --nav-item-white-space: pre;
+
+    --table-background: var(--stillmark-table-surface);
+    --table-header-background: var(--stillmark-table-header-background);
+    --table-header-color: var(--stillmark-table-header-color);
+    --table-border-color: var(--stillmark-table-row-divider);
+    --table-row-background-hover: var(--stillmark-table-row-hover);
+    --table-row-alt-background: var(--stillmark-table-row-alt);
+    --table-column-alt-background: var(--stillmark-table-row-alt);
+    --table-selection: var(--stillmark-accent-softer);
+    --table-selection-border-color: var(--stillmark-accent);
+    --table-header-weight: 600;
+
+    --checkbox-color: var(--stillmark-accent);
+    --checkbox-color-hover: var(--stillmark-accent);
+    --checkbox-border-color: var(--color-base-40);
+    --checkbox-border-color-hover: var(--stillmark-accent);
+    --checkbox-marker-color: #ffffff;
+
+    --callout-border-width: 1px;
+    --callout-border-opacity: 1;
+    --callout-radius: 8px;
+    --callout-padding: 8px 10px;
+    --callout-title-size: .94em;
+    --callout-title-weight: 650;
+    --callout-title-color: inherit;
+    --callout-content-padding: 2px 0 0;
+    --callout-content-background: transparent;
+    --callout-blend-mode: normal;
+    --callout-default: var(--stillmark-focus);
+    --callout-info: var(--stillmark-focus);
+    --callout-todo: var(--stillmark-focus);
+    --callout-summary: #4f6f62;
+    --callout-tip: #4f6f62;
+    --callout-question: #8a642e;
+    --callout-warning: #8a642e;
+    --callout-important: var(--stillmark-accent);
+    --callout-success: #55765c;
+    --callout-fail: #a24438;
+    --callout-error: #a24438;
+    --callout-bug: #a24438;
+    --callout-example: #70509a;
+    --callout-quote: var(--stillmark-quote-rule);
+
+    --embed-border-start: 2px solid var(--stillmark-quote-rule);
+    --embed-background: transparent;
+
+    --hr-color: var(--stillmark-shell-border);
+    --hr-thickness: 1px;
+
+    --text-selection: rgba(49, 95, 146, .22);
+    --icon-color: var(--text-muted);
+    --icon-color-hover: var(--text-normal);
+    --icon-opacity: .8;
+
+    --scrollbar-thumb-bg: rgba(49, 52, 48, .2);
+    --scrollbar-active-thumb-bg: rgba(49, 52, 48, .32);
+
+    --graph-line: var(--color-base-30);
+    --graph-text: var(--text-normal);
+
+    --input-shadow: inset 0 0 0 1px var(--stillmark-shell-border);
+    --input-shadow-hover: inset 0 0 0 1px var(--color-base-40);
+}
+
+.theme-dark {
+    /* ---------- Stillmark palette: dark ---------- */
+    --stillmark-accent: #e08a97;
+    --stillmark-accent-soft: rgba(224, 138, 151, .14);
+    --stillmark-accent-softer: rgba(224, 138, 151, .2);
+    --stillmark-focus: #8fb9eb;
+
+    --stillmark-inline-code-background: #35282c;
+    --stillmark-inline-code-color: #e2a2ad;
+
+    --stillmark-code-background: #222422;
+    --stillmark-code-border: #373b37;
+    --stillmark-code-border-focus: #9c6872;
+    --stillmark-code-focus-ring: rgba(224, 138, 151, .1);
+    --stillmark-code-toolbar: #9ca39d;
+    --stillmark-code-toolbar-hover: rgba(255, 255, 255, .07);
+    --stillmark-code-scrollbar: #565b65;
+    --stillmark-code-language: #d397a2;
+
+    --stillmark-quote-rule: #d0808f;
+    --stillmark-quote-color: #cfc6c8;
+
+    --stillmark-callout-background: #242724;
+    --stillmark-callout-border: #3a3f3b;
+    --stillmark-callout-content: #c6cbc6;
+    --stillmark-callout-note-soft: rgba(157, 181, 199, .13);
+    --stillmark-callout-warning-soft: rgba(224, 187, 122, .13);
+    --stillmark-callout-tip-soft: rgba(159, 193, 177, .13);
+    --stillmark-callout-important-soft: rgba(241, 154, 170, .13);
+    --stillmark-callout-caution-soft: rgba(239, 161, 147, .13);
+
+    --stillmark-table-surface: #1e201f;
+    --stillmark-table-header-background: #252826;
+    --stillmark-table-header-color: #cbd0cb;
+    --stillmark-table-outline: #3a3f3b;
+    --stillmark-table-row-divider: #343936;
+    --stillmark-table-column-divider: #2c312e;
+    --stillmark-table-row-alt: rgba(255, 255, 255, .018);
+    --stillmark-table-row-hover: rgba(255, 255, 255, .05);
+    --stillmark-table-code-background: rgba(224, 138, 151, .075);
+    --stillmark-table-code-color: #d8a2ab;
+
+    --stillmark-shell-background: #171918;
+    --stillmark-shell-panel: #222523;
+    --stillmark-shell-panel-muted: #1b1e1c;
+    --stillmark-shell-overlay: #252826;
+    --stillmark-shell-border: #353a36;
+    --stillmark-shell-hover: rgba(255, 255, 255, .055);
+    --stillmark-shell-shadow: 0 16px 40px rgba(0, 0, 0, .44), 0 1px 3px rgba(0, 0, 0, .32);
+
+    --stillmark-search-scrim: rgba(5, 7, 6, .68);
+    --stillmark-search-match-background: rgba(224, 138, 151, .2);
+    --stillmark-search-match-color: #f1a6b1;
+
+    --stillmark-link: #8ebcff;
+    --stillmark-link-hover: #b5d2ff;
+    --stillmark-link-underline: rgba(142, 188, 255, .58);
+    --stillmark-link-underline-hover: rgba(181, 210, 255, .96);
+
+    --stillmark-syntax-text: #e4e6eb;
+    --stillmark-syntax-comment: #9297a1;
+    --stillmark-syntax-keyword: #ff8fa3;
+    --stillmark-syntax-title: #8ebcff;
+    --stillmark-syntax-string: #e6ba79;
+    --stillmark-syntax-number: #d3a5ff;
+    --stillmark-syntax-attribute: #c4a3f0;
+    --stillmark-syntax-meta: #8ec9ea;
+    --stillmark-syntax-operator: #bdc1c9;
+    --stillmark-syntax-selection: #424a5a;
+
+    --stillmark-highlight-background: #786625;
+    --stillmark-highlight-color: #f1eee5;
+
+    --stillmark-tree-document-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 18 18'%3E%3Cpath d='M4 2.5h6.25L14 6.25v9.25H4zM10.25 2.5v3.75H14M6.75 12h4.5' fill='none' stroke='%23aeb5af' stroke-width='1.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='M6.75 9h4.5' fill='none' stroke='%23ff9aa8' stroke-width='1.4' stroke-linecap='round'/%3E%3C/svg%3E");
+
+    --stillmark-link-favicon-fallback: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cg fill='none' stroke='%23aab3bd' stroke-width='1.25'%3E%3Ccircle cx='8' cy='8' r='6.25'/%3E%3Cpath d='M1.75 8h12.5M8 1.75c1.7 1.65 2.65 3.8 2.65 6.25S9.7 12.6 8 14.25C6.3 12.6 5.35 10.45 5.35 8S6.3 3.4 8 1.75Z'/%3E%3C/g%3E%3C/svg%3E");
+
+    /* ---------- Obsidian base mappings: dark ---------- */
+    --color-red: #d77a70;
+    --color-orange: #d0995b;
+    --color-yellow: #e0bb7a;
+    --color-green: #88aa8d;
+    --color-cyan: #a9ced1;
+    --color-blue: #8fb9eb;
+    --color-purple: #c4a3f0;
+    --color-pink: #e08a97;
+
+    --color-base-00: #1e201f;
+    --color-base-05: #222422;
+    --color-base-10: #252826;
+    --color-base-20: #252826;
+    --color-base-25: #292d2a;
+    --color-base-30: #353a36;
+    --color-base-35: #3a3f3b;
+    --color-base-40: #4a504c;
+    --color-base-50: #656b66;
+    --color-base-60: #9b9d9a;
+    --color-base-70: #b3b9b3;
+    --color-base-100: #e4e7e2;
+
+    --accent-h: 353;
+    --accent-s: 67%;
+    --accent-l: 71%;
+
+    --highlight-mix-blend-mode: lighten;
+
+    --scrollbar-thumb-bg: rgba(225, 231, 226, .2);
+    --scrollbar-active-thumb-bg: rgba(225, 231, 226, .32);
+
+    --checkbox-marker-color: #25171a;
+    --text-selection: rgba(142, 188, 255, .3);
+    --drag-ghost-background: rgba(10, 12, 11, .85);
+}
+
+/* ==========================================================================
+   Application shell: paper center, muted workbench panels, hairline seams.
+   ========================================================================== */
+
+/* Sidebars and ribbon share one muted panel surface. */
+.workspace-split.mod-left-split,
+.workspace-split.mod-right-split {
+    background-color: var(--stillmark-shell-panel);
+}
+
+.workspace-split.mod-left-split .workspace-tabs,
+.workspace-split.mod-right-split .workspace-tabs,
+.workspace-split.mod-left-split .workspace-tab-container,
+.workspace-split.mod-right-split .workspace-tab-container {
+    background-color: var(--stillmark-shell-panel);
+}
+
+.workspace-ribbon {
+    border-inline-end: 1px solid var(--stillmark-shell-border);
+}
+
+/* Keep the editor as the plain paper surface, framed by hairlines. */
+.workspace-split.mod-root {
+    background-color: var(--stillmark-shell-background);
+}
+
+.workspace-tabs {
+    background-color: var(--stillmark-shell-panel-muted);
+}
+
+.workspace-tabs .workspace-leaf {
+    background-color: transparent;
+}
+
+.workspace-leaf-content[data-type="markdown"] .view-content {
+    background-color: var(--background-primary);
+}
+
+/* The document tab strip reads as one quiet strip, not a row of pills. */
+.mod-root .workspace-tab-header-container {
+    border-bottom: 1px solid var(--stillmark-shell-border);
+}
+
+.mod-root .workspace-tab-header-container-inner {
+    margin: 4px -2px calc(1px * -1);
+    padding: 0 4px;
+}
+
+.mod-root .workspace-tab-header {
+    padding: 1px 3px;
+    border-radius: 5px;
+    color: var(--text-muted);
+    font-size: 13px;
+    --tab-curve: 0px;
+}
+
+.mod-root .workspace-tab-header::before,
+.mod-root .workspace-tab-header::after {
+    box-shadow: none;
+}
+
+@media (hover: hover) {
+    .mod-root .workspace-tab-header:not(.is-active):hover {
+        background-color: var(--stillmark-shell-hover);
+        box-shadow: none;
+    }
+
+    .mod-root .workspace-tab-header:not(.is-active):hover::before,
+    .mod-root .workspace-tab-header:not(.is-active):hover::after {
+        box-shadow: none;
+    }
+
+    .mod-root .workspace-tab-header:not(.is-active):hover .workspace-tab-header-inner {
+        background-color: transparent;
+    }
+}
+
+.mod-root .workspace-tab-header.is-active {
+    background-color: var(--stillmark-accent-soft);
+    box-shadow: none;
+    color: var(--text-normal);
+}
+
+.mod-root .workspace-tab-header.is-active::before,
+.mod-root .workspace-tab-header.is-active::after {
+    box-shadow: none;
+}
+
+.mod-root .workspace-tab-header.is-active .workspace-tab-header-inner {
+    background-color: transparent;
+    box-shadow: none;
+}
+
+/* Active tabs carry the berry underline; the quiet divider between inactive tabs is removed for the active one. */
+.mod-root .workspace-tab-header.is-active .workspace-tab-header-inner::after {
+    position: absolute;
+    inset-inline: 6px;
+    inset-block: auto 0;
+    width: auto;
+    height: 2px;
+    border-radius: 0;
+    background-color: var(--stillmark-accent);
+    opacity: 1;
+}
+
+.workspace-tab-header-inner {
+    border-radius: 5px;
+}
+
+.workspace-tab-header-inner-title {
+    font-size: 13px;
+}
+
+/* Status bar stays a flat hairline-separated strip. */
+.status-bar {
+    border-radius: 0;
+    border-width: 1px 0 0 0;
+    font-size: 11.5px;
+}
+
+/* Menus and popovers float as white overlays. */
+.menu {
+    border-radius: 8px;
+    padding-top: 4px;
+    padding-bottom: 4px;
+}
+
+.menu-item {
+    border-radius: 4px;
+}
+
+body:not(.is-mobile) .modal {
+    border-radius: 8px;
+}
+
+/* ==========================================================================
+   Search: the input is the primary entrance; results stay dense and quiet.
+   ========================================================================== */
+
+/* Quick switcher and command palette */
+.prompt {
+    border-radius: 12px;
+    box-shadow: var(--stillmark-shell-shadow);
+}
+
+.prompt-input {
+    font-size: 16px;
+    font-weight: 500;
+}
+
+.prompt-instructions {
+    border-top: 1px solid var(--stillmark-shell-border);
+    background-color: var(--stillmark-shell-panel-muted);
+    color: var(--text-faint);
+    font-size: 11px;
+}
+
+.prompt .suggestion-item.is-selected {
+    background-color: var(--stillmark-accent-soft);
+    box-shadow: inset 2px 0 var(--stillmark-accent);
+}
+
+/* Global search panel */
+.global-search-input-container input {
+    background-color: var(--stillmark-shell-overlay);
+}
+
+.search-result-container.mod-global-search {
+    padding: var(--size-4-2) var(--size-4-3);
+}
+
+.search-result-file-matches {
+    background-color: var(--background-primary);
+    box-shadow: 0 0 0 1px var(--stillmark-shell-border);
+    border-radius: 5px;
+}
+
+.search-result-file-match {
+    border-bottom-color: var(--stillmark-table-row-divider);
+}
+
+@media (hover: hover) {
+    .search-result-file-match:hover {
+        background-color: var(--stillmark-shell-hover);
+    }
+}
+
+.search-result-file-match.is-active {
+    background-color: var(--stillmark-accent-soft);
+}
+
+.search-result-file-matched-text {
+    color: var(--stillmark-search-match-color);
+    background-color: var(--stillmark-search-match-background);
+}
+
+.search-info-container {
+    color: var(--text-faint);
+}
+
+.search-result-file-title .search-result-file-matched-text {
+    color: var(--stillmark-search-match-color);
+}
+
+/* ==========================================================================
+   Document tree: restrained icons, quiet selection, hairline guides.
+   ========================================================================== */
+
+.nav-folder-title .tree-item-icon .svg-icon,
+.nav-folder-collapse-indicator .svg-icon {
+    color: var(--text-faint);
+}
+
+/* Notes use the theme's quiet document glyph instead of system icons. */
+.nav-file-title .tree-item-icon.nav-file-icon {
+    width: 18px;
+    height: 18px;
+    background-image: var(--stillmark-tree-document-icon);
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: 18px 18px;
+    color: transparent;
+    opacity: 1;
+}
+
+.nav-file-title .tree-item-icon.nav-file-icon .svg-icon {
+    display: none;
+}
+
+/* The current note keeps a persistent low-saturation berry highlight. */
+.nav-file-title.is-active {
+    background-color: var(--stillmark-accent-soft) !important;
+    box-shadow: none;
+}
+
+.nav-file-title.is-active .nav-file-title-content {
+    color: var(--text-normal);
+}
+
+/* Tree guides stay hairline-neutral; no loud relational hover paths. */
+.tree-item-children {
+    border-inline-start-color: var(--stillmark-shell-border);
+}
+
+/* ==========================================================================
+   Editor typography and headings: lighter hierarchy over plain paper.
+   ========================================================================== */
+
+.markdown-source-view,
+.markdown-preview-view {
+    background-color: var(--background-primary);
+}
+
+.view-header {
+    border-bottom: 1px solid var(--stillmark-shell-border);
+    background-color: var(--background-primary);
+}
+
+.view-header-title {
+    font-weight: 500;
+}
+
+.inline-title {
+    font-weight: 650;
+    letter-spacing: -.02em;
+}
+
+.markdown-rendered h1,
+.markdown-rendered h2,
+.markdown-rendered h3,
+.markdown-rendered h4,
+.markdown-rendered h5,
+.markdown-rendered h6,
+.markdown-source-view.mod-cm6 .HyperMD-header {
+    font-weight: 600;
+}
+
+.markdown-rendered hr,
+.markdown-source-view.mod-cm6 hr {
+    border-color: var(--stillmark-shell-border);
+}
+
+/* ==========================================================================
+   Links: explicit blue with an always-visible hairline underline in both
+   reading and live-preview. Hover deepens text and underline only.
+   ========================================================================== */
+
+.markdown-rendered a,
+.markdown-source-view.mod-cm6 span.cm-link,
+.markdown-source-view.mod-cm6 span.cm-url,
+.markdown-source-view.mod-cm6 span.cm-hmd-internal-link {
+    text-decoration-line: underline;
+    text-decoration-color: var(--stillmark-link-underline);
+    text-decoration-thickness: 1px;
+    text-underline-offset: .14em;
+    text-decoration-skip-ink: auto;
+    transition: color 120ms ease, text-decoration-color 120ms ease;
+}
+
+.markdown-rendered a:hover,
+.markdown-source-view.mod-cm6 span.cm-link:hover,
+.markdown-source-view.mod-cm6 span.cm-hmd-internal-link:hover {
+    text-decoration-color: var(--stillmark-link-underline-hover);
+}
+
+/* External links show a compact globe marker before the text, not a pill.
+   Live preview renders external links as real anchors, so one selector set
+   covers both views. The native trailing-arrow background is removed first. */
+.markdown-rendered .external-link,
+.external-link {
+    background-image: none;
+    padding-inline-end: 0;
+}
+
+.external-link:not(.media-embed):not(.file-embed)::before {
+    display: inline-block;
+    width: .92em;
+    height: .92em;
+    margin-inline-end: .3em;
+    border-radius: 2px;
+    background-image: var(--stillmark-link-favicon-fallback);
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: contain;
+    content: "";
+    vertical-align: -.1em;
+}
+
+/* ==========================================================================
+   Inline code: compact muted-berry chips that never disturb line rhythm.
+   ========================================================================== */
+
+.markdown-rendered code,
+.cm-s-obsidian span.cm-inline-code:not(.cm-formatting):not(.cm-hmd-indented-code) {
+    padding: 0 .34em;
+    border: 0;
+    border-radius: 4px;
+    background: var(--stillmark-inline-code-background);
+    color: var(--stillmark-inline-code-color);
+    font-weight: 500;
+    box-decoration-break: clone;
+    -webkit-box-decoration-break: clone;
+    overflow-wrap: anywhere;
+}
+
+.cm-s-obsidian span.cm-inline-code.cm-formatting {
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: var(--stillmark-inline-code-color);
+    opacity: .45;
+}
+
+/* Tables reuse a slightly tighter chip so rows keep their scan density. */
+.markdown-rendered table code,
+.markdown-source-view.mod-cm6 .cm-table-widget code {
+    padding: 0 .22em;
+    border-radius: 3px;
+    background: var(--stillmark-table-code-background);
+    color: var(--stillmark-table-code-color);
+    font-size: .94em;
+}
+
+/* ==========================================================================
+   Code blocks: flat in-prose panels with a clear focus state.
+   ========================================================================== */
+
+.markdown-rendered pre,
+.markdown-source-view.mod-cm6 .cm-preview-code-block pre {
+    background-color: var(--stillmark-code-background);
+    border: 1px solid var(--stillmark-code-border);
+    border-radius: 8px;
+    transition: border-color 120ms ease, box-shadow 120ms ease;
+}
+
+.markdown-rendered pre:focus-within {
+    border-color: var(--stillmark-code-border-focus);
+    box-shadow: 0 0 0 2px var(--stillmark-code-focus-ring);
+}
+
+.markdown-rendered pre code {
+    color: var(--stillmark-syntax-text);
+}
+
+/* Live-preview code blocks share the panel treatment. */
+.cm-s-obsidian div.HyperMD-codeblock-bg {
+    background-color: var(--stillmark-code-background);
+    border-color: var(--stillmark-code-border);
+}
+
+.cm-s-obsidian div.HyperMD-codeblock-begin-bg,
+.cm-s-obsidian div.HyperMD-codeblock-end-bg {
+    background-color: var(--stillmark-code-background);
+    border-color: var(--stillmark-code-border);
+}
+
+.markdown-source-view.mod-cm6 .cm-line.HyperMD-codeblock,
+.cm-s-obsidian .HyperMD-codeblock-begin,
+.cm-s-obsidian .HyperMD-codeblock-end {
+    color: var(--stillmark-syntax-text);
+}
+
+.cm-s-obsidian .HyperMD-codeblock {
+    font-size: .86em;
+    line-height: 1.5;
+}
+
+/* The language flair reads as a quiet berry tag, not a loud capsule. */
+.markdown-source-view.mod-cm6 .code-block-flair,
+.markdown-rendered .code-block-flair {
+    background: transparent;
+    color: var(--stillmark-code-language);
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: .035em;
+    opacity: 1;
+}
+
+.markdown-rendered button.copy-code-button {
+    color: var(--stillmark-code-toolbar);
+    opacity: .82;
+}
+
+.markdown-rendered button.copy-code-button:hover {
+    background-color: var(--stillmark-code-toolbar-hover);
+    color: var(--text-normal);
+}
+
+/* ==========================================================================
+   Syntax palette: full Prism token + CodeMirror token coverage in the
+   Stillmark red / blue / violet / amber scheme, both modes.
+   ========================================================================== */
+
+.markdown-rendered .token.comment,
+.markdown-rendered .token.prolog,
+.markdown-rendered .token.doctype,
+.markdown-rendered .token.cdata,
+.markdown-rendered .token.namespace {
+    color: var(--stillmark-syntax-comment);
+    font-style: normal;
+}
+
+.markdown-rendered .token.tag,
+.markdown-rendered .token.constant,
+.markdown-rendered .token.symbol,
+.markdown-rendered .token.deleted {
+    color: var(--stillmark-syntax-meta);
+}
+
+.markdown-rendered .token.punctuation {
+    color: var(--stillmark-syntax-operator);
+}
+
+.markdown-rendered .token.boolean,
+.markdown-rendered .token.number {
+    color: var(--stillmark-syntax-number);
+}
+
+.markdown-rendered .token.selector,
+.markdown-rendered .token.attr-name,
+.markdown-rendered .token.string,
+.markdown-rendered .token.char,
+.markdown-rendered .token.inserted {
+    color: var(--stillmark-syntax-string);
+}
+
+.markdown-rendered .token.operator {
+    color: var(--stillmark-syntax-operator);
+}
+
+.markdown-rendered .token.entity,
+.markdown-rendered .token.parameter,
+.markdown-rendered .token.property,
+.markdown-rendered .token.url,
+.markdown-rendered .language-css .token.string,
+.markdown-rendered .token.variable {
+    color: var(--stillmark-syntax-attribute);
+}
+
+.markdown-rendered .token.atrule,
+.markdown-rendered .token.attr-value,
+.markdown-rendered .token.builtin,
+.markdown-rendered .token.function,
+.markdown-rendered .token.class-name,
+.markdown-rendered .token.property-access {
+    color: var(--stillmark-syntax-title);
+}
+
+.markdown-rendered .token.keyword {
+    color: var(--stillmark-syntax-keyword);
+}
+
+.markdown-rendered .token.regex,
+.markdown-rendered .token.important {
+    color: var(--stillmark-syntax-keyword);
+}
+
+.markdown-source-view.mod-cm6 .cm-comment,
+.markdown-source-view.mod-cm6 .cm-meta {
+    color: var(--stillmark-syntax-comment);
+}
+
+.markdown-source-view.mod-cm6 .cm-tag {
+    color: var(--stillmark-syntax-meta);
+}
+
+.markdown-source-view.mod-cm6 .cm-punctuation,
+.markdown-source-view.mod-cm6 .cm-bracket,
+.markdown-source-view.mod-cm6 .cm-hr {
+    color: var(--stillmark-syntax-operator);
+}
+
+.markdown-source-view.mod-cm6 .cm-number,
+.markdown-source-view.mod-cm6 .cm-atom {
+    color: var(--stillmark-syntax-number);
+}
+
+.markdown-source-view.mod-cm6 .cm-qualifier,
+.markdown-source-view.mod-cm6 .cm-string,
+.markdown-source-view.mod-cm6 .cm-string-2 {
+    color: var(--stillmark-syntax-string);
+}
+
+.markdown-source-view.mod-cm6 .cm-operator {
+    color: var(--stillmark-syntax-operator);
+}
+
+.markdown-source-view.mod-cm6 .cm-link,
+.markdown-source-view.mod-cm6 .cm-variable,
+.markdown-source-view.mod-cm6 .cm-variable-2,
+.markdown-source-view.mod-cm6 .cm-variable-3 {
+    color: var(--stillmark-syntax-attribute);
+}
+
+.markdown-source-view.mod-cm6 .cm-builtin,
+.markdown-source-view.mod-cm6 .cm-property,
+.markdown-source-view.mod-cm6 .cm-attribute,
+.markdown-source-view.mod-cm6 .cm-type,
+.markdown-source-view.mod-cm6 .cm-def {
+    color: var(--stillmark-syntax-title);
+}
+
+.markdown-source-view.mod-cm6 .cm-keyword {
+    color: var(--stillmark-syntax-keyword);
+}
+
+/* ==========================================================================
+   Quotes and callouts: typographic quotes, quiet neutral callout panels.
+   ========================================================================== */
+
+.markdown-rendered blockquote,
+.markdown-source-view.mod-cm6 .HyperMD-quote {
+    border-inline-start: 2px solid var(--stillmark-quote-rule);
+    color: var(--stillmark-quote-color);
+    font-style: normal;
+    background-color: transparent;
+}
+
+.markdown-source-view.mod-cm6.is-live-preview .HyperMD-quote::before {
+    border-inline-start: 2px solid var(--stillmark-quote-rule);
+}
+
+.cm-s-obsidian span.cm-quote {
+    color: var(--stillmark-quote-color);
+}
+
+/* Callouts use one quiet panel; only icon chips and titles carry type color. */
+.callout {
+    border-color: var(--stillmark-callout-border);
+    background-color: var(--stillmark-callout-background);
+    box-shadow: none;
+    color: var(--stillmark-callout-content);
+}
+
+.callout-title {
+    color: var(--callout-color);
+}
+
+.callout-icon {
+    box-sizing: border-box;
+    width: 22px;
+    height: 22px;
+    padding: 4px;
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px;
+    background: var(--stillmark-callout-note-soft);
+}
+
+.callout-icon .svg-icon {
+    color: var(--callout-color);
+}
+
+.callout-title-inner {
+    font-weight: 650;
+    line-height: 22px;
+}
+
+.callout-content {
+    color: var(--stillmark-callout-content);
+}
+
+.callout[data-callout="note"] .callout-icon,
+.callout[data-callout="info"] .callout-icon,
+.callout[data-callout="todo"] .callout-icon,
+.callout[data-callout="abstract"] .callout-icon {
+    background: var(--stillmark-callout-note-soft);
+}
+
+.callout[data-callout="warning"] .callout-icon,
+.callout[data-callout="caution"] .callout-icon,
+.callout[data-callout="attention"] .callout-icon,
+.callout[data-callout="question"] .callout-icon {
+    background: var(--stillmark-callout-warning-soft);
+}
+
+.callout[data-callout="tip"] .callout-icon,
+.callout[data-callout="hint"] .callout-icon,
+.callout[data-callout="success"] .callout-icon,
+.callout[data-callout="check"] .callout-icon,
+.callout[data-callout="done"] .callout-icon {
+    background: var(--stillmark-callout-tip-soft);
+}
+
+.callout[data-callout="important"] .callout-icon,
+.callout[data-callout="example"] .callout-icon {
+    background: var(--stillmark-callout-important-soft);
+}
+
+.callout[data-callout="danger"] .callout-icon,
+.callout[data-callout="error"] .callout-icon,
+.callout[data-callout="bug"] .callout-icon,
+.callout[data-callout="failure"] .callout-icon {
+    background: var(--stillmark-callout-caution-soft);
+}
+
+.callout[data-callout="quote"],
+.callout[data-callout="cite"] {
+    border-color: transparent;
+    background-color: transparent;
+    padding-inline-start: 1em;
+    color: var(--stillmark-quote-color);
+}
+
+.callout[data-callout="quote"] .callout-title,
+.callout[data-callout="cite"] .callout-title {
+    color: var(--stillmark-quote-color);
+    font-weight: 500;
+}
+
+/* ==========================================================================
+   Tables: compact hairline grids that never become floating cards.
+   ========================================================================== */
+
+.markdown-rendered table,
+.markdown-source-view.mod-cm6 .cm-table-widget table {
+    background: var(--stillmark-table-surface);
+    border-collapse: separate;
+    border-spacing: 0;
+    font-size: .93em;
+    line-height: 20px;
+}
+
+.markdown-rendered td,
+.markdown-rendered th,
+.markdown-source-view.mod-cm6 .cm-table-widget td,
+.markdown-source-view.mod-cm6 .cm-table-widget th {
+    padding: 5px 8px;
+    border: 0;
+    border-right: 1px solid var(--stillmark-table-column-divider);
+    border-bottom: 1px solid var(--stillmark-table-row-divider);
+    background: var(--stillmark-table-surface);
+    line-height: 20px;
+    vertical-align: middle;
+}
+
+.markdown-rendered thead th,
+.markdown-rendered thead td,
+.markdown-source-view.mod-cm6 .cm-table-widget thead th,
+.markdown-source-view.mod-cm6 .cm-table-widget thead td {
+    padding: 6px 8px;
+    background: var(--stillmark-table-header-background);
+    color: var(--stillmark-table-header-color);
+    font-size: .92em;
+    font-weight: 600;
+    text-align: left;
+}
+
+.markdown-rendered table tr > :first-child,
+.markdown-source-view.mod-cm6 .cm-table-widget table tr > :first-child {
+    border-left: 1px solid var(--stillmark-table-outline);
+}
+
+.markdown-rendered table tr > :last-child,
+.markdown-source-view.mod-cm6 .cm-table-widget table tr > :last-child {
+    border-right-color: var(--stillmark-table-outline);
+}
+
+.markdown-rendered thead tr:first-child > *,
+.markdown-source-view.mod-cm6 .cm-table-widget thead tr:first-child > * {
+    border-top: 1px solid var(--stillmark-table-outline);
+}
+
+.markdown-rendered tbody:last-child tr:last-child > *,
+.markdown-source-view.mod-cm6 .cm-table-widget tbody:last-child tr:last-child > * {
+    border-bottom-color: var(--stillmark-table-outline);
+}
+
+.markdown-rendered thead tr:first-child > :first-child,
+.markdown-source-view.mod-cm6 .cm-table-widget thead tr:first-child > :first-child {
+    border-start-start-radius: 5px;
+}
+
+.markdown-rendered thead tr:first-child > :last-child,
+.markdown-source-view.mod-cm6 .cm-table-widget thead tr:first-child > :last-child {
+    border-start-end-radius: 5px;
+}
+
+.markdown-rendered tbody:last-child tr:last-child > :first-child,
+.markdown-source-view.mod-cm6 .cm-table-widget tbody:last-child tr:last-child > :first-child {
+    border-end-start-radius: 5px;
+}
+
+.markdown-rendered tbody:last-child tr:last-child > :last-child,
+.markdown-source-view.mod-cm6 .cm-table-widget tbody:last-child tr:last-child > :last-child {
+    border-end-end-radius: 5px;
+}
+
+.markdown-rendered tbody tr:nth-child(even) > *,
+.markdown-source-view.mod-cm6 .cm-table-widget tbody tr:nth-child(even) > * {
+    background: var(--stillmark-table-row-alt);
+}
+
+@media (hover: hover) {
+    .markdown-rendered tbody tr:hover > *,
+    .markdown-source-view.mod-cm6 .cm-table-widget tbody tr:hover > * {
+        background: var(--stillmark-table-row-hover);
+    }
+}
+
+/* ==========================================================================
+   Tags: restrained focus-blue capsules with a quiet hash. The default
+   "#"-free rendering is kept; only color, weight, and shape are restyled.
+   ========================================================================== */
+
+a.tag,
+.cm-s-obsidian span.cm-hashtag {
+    color: var(--tag-color);
+    background-color: var(--tag-background);
+    border: 1px solid var(--tag-border-color);
+    border-radius: 999px;
+    font-weight: var(--tag-weight);
+    text-decoration: none;
+}
+
+a.tag:hover,
+.cm-s-obsidian span.cm-hashtag:hover {
+    color: var(--tag-color-hover);
+    background-color: var(--tag-background-hover);
+    border-color: var(--tag-border-color-hover);
+}
+
+/* Metadata property tags follow the same capsule treatment. */
+.metadata-property .multi-select-pill {
+    border-radius: 999px;
+    box-shadow: 0 0 0 1px var(--tag-border-color);
+    background-color: var(--tag-background);
+    color: var(--tag-color);
+    font-weight: 500;
+}
+
+/* ==========================================================================
+   Highlights: warm paper amber that matches the SiYuan mark treatment.
+   ========================================================================== */
+
+.markdown-rendered mark,
+.cm-s-obsidian span.cm-highlight {
+    background-color: var(--stillmark-highlight-background);
+    color: var(--stillmark-highlight-color);
+}
+
+/* ==========================================================================
+   Frontmatter and properties: hairline metadata under the plain paper.
+   ========================================================================== */
+
+.metadata-container {
+    --metadata-label-background-content: transparent;
+    --metadata-background: transparent;
+    --metadata-border-color: var(--stillmark-shell-border);
+    --metadata-border-color-hover: var(--color-base-40);
+    --metadata-divider-color: var(--stillmark-table-row-divider);
+    --metadata-divider-color-focus: var(--stillmark-accent);
+    --metadata-label-text-color: var(--text-muted);
+    --metadata-input-text-color: var(--text-normal);
+    --metadata-input-font-size: var(--font-ui-small);
+}
+
+/* ==========================================================================
+   Graph view
+   ========================================================================== */
+
+.graph-view.color-fill {
+    color: var(--text-muted);
+}
+
+.graph-view.color-fill-focused {
+    color: var(--stillmark-accent);
+}
+
+.graph-view.color-fill-tag {
+    color: var(--stillmark-focus);
+}
+
+.graph-view.color-fill-attachment {
+    color: #8a642e;
+}
+
+.graph-view.color-line {
+    color: var(--graph-line);
+}
+
+/* ==========================================================================
+   Print: keep the white canvas and readable ink.
+   ========================================================================== */
+
+@media print {
+    .theme-dark {
+        --stillmark-inline-code-background: #f4eeee;
+        --stillmark-inline-code-color: #8a3f50;
+        --stillmark-code-background: #f8f9f8;
+        --stillmark-syntax-text: #2e3137;
+        --stillmark-syntax-comment: #687078;
+        --stillmark-syntax-keyword: #a62d4b;
+        --stillmark-syntax-title: #2f6095;
+        --stillmark-syntax-string: #8b592b;
+        --stillmark-syntax-number: #714b9c;
+        --stillmark-syntax-attribute: #70509a;
+        --stillmark-syntax-meta: #3b6d88;
+        --stillmark-syntax-operator: #555c63;
+        --stillmark-quote-rule: #bd7181;
+        --stillmark-quote-color: #665d5f;
+    }
+}
