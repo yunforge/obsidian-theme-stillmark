@@ -36,6 +36,19 @@ body {
     --accent-s: 52%;
     --accent-l: 41%;
 
+    /* Code-first typography: a curated monospace stack (the user's
+       Appearance font setting still wins via --font-monospace-override),
+       one code size shared by reading and live preview, and horizontal
+       scroll instead of wrap for long lines. */
+    --font-monospace-theme: "JetBrains Mono", "JetBrainsMono Nerd Font", "Cascadia Code", "Fira Code", ui-monospace, "SF Mono", "Source Code Pro", Menlo, Consolas, "DejaVu Sans Mono", monospace;
+    --code-size: .86em;
+    --code-white-space: pre;
+
+    /* Deep heading ladder: h5/h6 step back to body size so h4–h6 differ
+       by more than nothing. */
+    --h5-size: 1em;
+    --h6-size: 1em;
+
     /* ---------- Stillmark palette: light ---------- */
     --stillmark-accent: #9f3345;
     --stillmark-accent-soft: rgba(159, 51, 69, .09);
@@ -102,14 +115,17 @@ body {
     --stillmark-link-underline: rgba(49, 95, 146, .5);
     --stillmark-link-underline-hover: rgba(36, 79, 125, .92);
 
-    /* Syntax palette: red / blue / violet / amber, never teal prose. */
+    /* Syntax palette: red / blue / violet / amber, never teal prose.
+       Plain identifiers stay neutral; hue is spent on keywords, strings,
+       calls, and properties. Attribute reads as slate-violet so the vivid
+       violet stays reserved for numbers and constants. */
     --stillmark-syntax-text: #2e3137;
     --stillmark-syntax-comment: #687078;
     --stillmark-syntax-keyword: #a62d4b;
     --stillmark-syntax-title: #2f6095;
-    --stillmark-syntax-string: #8b592b;
+    --stillmark-syntax-string: #93662c;
     --stillmark-syntax-number: #714b9c;
-    --stillmark-syntax-attribute: #70509a;
+    --stillmark-syntax-attribute: #6b628f;
     --stillmark-syntax-meta: #3b6d88;
     --stillmark-syntax-operator: #555c63;
     --stillmark-syntax-selection: #dce7f2;
@@ -175,6 +191,7 @@ body {
     --prompt-background: var(--stillmark-shell-overlay);
     --prompt-border-color: var(--stillmark-shell-border);
     --workspace-background-translucent: rgba(241, 243, 240, .6);
+    --background-modifier-cover: var(--stillmark-search-scrim);
     --background-modifier-message: #343733;
     --notice-background: #343733;
     --notice-color: #f4f2ec;
@@ -359,11 +376,11 @@ body {
 
     --stillmark-syntax-text: #e4e6eb;
     --stillmark-syntax-comment: #9297a1;
-    --stillmark-syntax-keyword: #ff8fa3;
+    --stillmark-syntax-keyword: #e899a8;
     --stillmark-syntax-title: #8ebcff;
     --stillmark-syntax-string: #e6ba79;
     --stillmark-syntax-number: #d3a5ff;
-    --stillmark-syntax-attribute: #c4a3f0;
+    --stillmark-syntax-attribute: #b7aede;
     --stillmark-syntax-meta: #8ec9ea;
     --stillmark-syntax-operator: #bdc1c9;
     --stillmark-syntax-selection: #424a5a;
@@ -529,7 +546,8 @@ body {
 .status-bar {
     border-radius: 0;
     border-width: 1px 0 0 0;
-    font-size: 11.5px;
+    color: var(--text-muted);
+    font-size: 12px;
 }
 
 /* Menus and popovers float as white overlays. */
@@ -689,6 +707,18 @@ body:not(.is-mobile) .modal {
     font-weight: 600;
 }
 
+/* h2 anchors sections with a hairline; h6 steps back to muted body size. */
+.markdown-rendered h2,
+.markdown-source-view.mod-cm6 .HyperMD-header-2 {
+    padding-bottom: .2em;
+    border-bottom: 1px solid var(--stillmark-shell-border);
+}
+
+.markdown-rendered h6,
+.markdown-source-view.mod-cm6 span.cm-header-6 {
+    color: var(--text-muted);
+}
+
 .markdown-rendered hr,
 .markdown-source-view.mod-cm6 hr {
     border-color: var(--stillmark-shell-border);
@@ -715,6 +745,12 @@ body:not(.is-mobile) .modal {
 .markdown-source-view.mod-cm6 span.cm-link:hover,
 .markdown-source-view.mod-cm6 span.cm-hmd-internal-link:hover {
     text-decoration-color: var(--stillmark-link-underline-hover);
+}
+
+/* Markdown links in the editor stay theme-link blue; the syntax palette
+   no longer paints them violet. */
+.markdown-source-view.mod-cm6 span.cm-link {
+    color: var(--stillmark-link);
 }
 
 /* External links show a compact globe marker before the text, not a pill.
@@ -784,6 +820,9 @@ body:not(.is-mobile) .modal {
     background-color: var(--stillmark-code-background);
     border: 1px solid var(--stillmark-code-border);
     border-radius: 8px;
+    line-height: 1.5;
+    scrollbar-width: thin;
+    scrollbar-color: var(--stillmark-code-scrollbar) transparent;
     transition: border-color 120ms ease, box-shadow 120ms ease;
 }
 
@@ -792,20 +831,50 @@ body:not(.is-mobile) .modal {
     box-shadow: 0 0 0 2px var(--stillmark-code-focus-ring);
 }
 
+/* Long code lines scroll under a slim matching thumb instead of wrapping. */
+.markdown-rendered pre::-webkit-scrollbar {
+    height: 8px;
+}
+
+.markdown-rendered pre::-webkit-scrollbar-track {
+    background-color: transparent;
+}
+
+.markdown-rendered pre::-webkit-scrollbar-thumb {
+    background-color: var(--stillmark-code-scrollbar);
+    border-radius: 4px;
+}
+
+/* Code selections sit on the calmer slate-blue instead of the prose blue. */
+.markdown-rendered pre ::selection,
+.markdown-source-view.mod-cm6 .HyperMD-codeblock ::selection {
+    background-color: var(--stillmark-syntax-selection);
+}
+
 .markdown-rendered pre code {
     color: var(--stillmark-syntax-text);
 }
 
-/* Live-preview code blocks share the panel treatment. */
+/* Live-preview code blocks share the panel treatment. The per-line
+   background layers carry the side borders so the whole block reads as
+   one bordered box, matching the reading-view pre. */
 .cm-s-obsidian div.HyperMD-codeblock-bg {
     background-color: var(--stillmark-code-background);
-    border-color: var(--stillmark-code-border);
+    border: 0 solid var(--stillmark-code-border);
+    border-left-width: 1px;
+    border-right-width: 1px;
 }
 
-.cm-s-obsidian div.HyperMD-codeblock-begin-bg,
+.cm-s-obsidian div.HyperMD-codeblock-begin-bg {
+    border-top-width: 1px;
+    border-top-left-radius: var(--code-radius);
+    border-top-right-radius: var(--code-radius);
+}
+
 .cm-s-obsidian div.HyperMD-codeblock-end-bg {
-    background-color: var(--stillmark-code-background);
-    border-color: var(--stillmark-code-border);
+    border-bottom-width: 1px;
+    border-bottom-left-radius: var(--code-radius);
+    border-bottom-right-radius: var(--code-radius);
 }
 
 .markdown-source-view.mod-cm6 .cm-line.HyperMD-codeblock,
@@ -814,9 +883,17 @@ body:not(.is-mobile) .modal {
     color: var(--stillmark-syntax-text);
 }
 
+/* --code-size drives both views, so only the rhythm is fixed here. */
 .cm-s-obsidian .HyperMD-codeblock {
-    font-size: .86em;
     line-height: 1.5;
+}
+
+/* Mermaid diagrams render on the same panel surface as code blocks. */
+.markdown-rendered .mermaid {
+    background-color: var(--stillmark-code-background);
+    border: 1px solid var(--stillmark-code-border);
+    border-radius: 8px;
+    padding: 10px;
 }
 
 /* The language flair reads as a quiet berry tag, not a loud capsule. */
@@ -842,7 +919,9 @@ body:not(.is-mobile) .modal {
 
 /* ==========================================================================
    Syntax palette: full Prism token + CodeMirror token coverage in the
-   Stillmark red / blue / violet / amber scheme, both modes.
+   Stillmark berry/blue/violet/amber scheme, both modes. The two engines
+   are mapped to the same concepts so both views agree: keywords berry,
+   strings amber, calls blue, properties soft violet, identifiers neutral.
    ========================================================================== */
 
 .markdown-rendered .token.comment,
@@ -855,8 +934,6 @@ body:not(.is-mobile) .modal {
 }
 
 .markdown-rendered .token.tag,
-.markdown-rendered .token.constant,
-.markdown-rendered .token.symbol,
 .markdown-rendered .token.deleted {
     color: var(--stillmark-syntax-meta);
 }
@@ -866,14 +943,16 @@ body:not(.is-mobile) .modal {
 }
 
 .markdown-rendered .token.boolean,
-.markdown-rendered .token.number {
+.markdown-rendered .token.number,
+.markdown-rendered .token.constant,
+.markdown-rendered .token.symbol {
     color: var(--stillmark-syntax-number);
 }
 
 .markdown-rendered .token.selector,
-.markdown-rendered .token.attr-name,
 .markdown-rendered .token.string,
 .markdown-rendered .token.char,
+.markdown-rendered .token.attr-value,
 .markdown-rendered .token.inserted {
     color: var(--stillmark-syntax-string);
 }
@@ -882,28 +961,29 @@ body:not(.is-mobile) .modal {
     color: var(--stillmark-syntax-operator);
 }
 
-.markdown-rendered .token.entity,
 .markdown-rendered .token.parameter,
 .markdown-rendered .token.property,
+.markdown-rendered .token.property-access,
+.markdown-rendered .token.attr-name,
+.markdown-rendered .token.entity,
 .markdown-rendered .token.url,
-.markdown-rendered .language-css .token.string,
-.markdown-rendered .token.variable {
+.markdown-rendered .language-css .token.string {
     color: var(--stillmark-syntax-attribute);
 }
 
+/* Plain identifiers keep the neutral text color in both engines. */
+.markdown-rendered .token.variable {
+    color: var(--stillmark-syntax-text);
+}
+
 .markdown-rendered .token.atrule,
-.markdown-rendered .token.attr-value,
 .markdown-rendered .token.builtin,
 .markdown-rendered .token.function,
-.markdown-rendered .token.class-name,
-.markdown-rendered .token.property-access {
+.markdown-rendered .token.class-name {
     color: var(--stillmark-syntax-title);
 }
 
-.markdown-rendered .token.keyword {
-    color: var(--stillmark-syntax-keyword);
-}
-
+.markdown-rendered .token.keyword,
 .markdown-rendered .token.regex,
 .markdown-rendered .token.important {
     color: var(--stillmark-syntax-keyword);
@@ -929,9 +1009,9 @@ body:not(.is-mobile) .modal {
     color: var(--stillmark-syntax-number);
 }
 
-.markdown-source-view.mod-cm6 .cm-qualifier,
 .markdown-source-view.mod-cm6 .cm-string,
-.markdown-source-view.mod-cm6 .cm-string-2 {
+.markdown-source-view.mod-cm6 .cm-string-2,
+.markdown-source-view.mod-cm6 .cm-qualifier {
     color: var(--stillmark-syntax-string);
 }
 
@@ -939,18 +1019,20 @@ body:not(.is-mobile) .modal {
     color: var(--stillmark-syntax-operator);
 }
 
-.markdown-source-view.mod-cm6 .cm-link,
 .markdown-source-view.mod-cm6 .cm-variable,
 .markdown-source-view.mod-cm6 .cm-variable-2,
 .markdown-source-view.mod-cm6 .cm-variable-3 {
+    color: var(--stillmark-syntax-text);
+}
+
+.markdown-source-view.mod-cm6 .cm-property,
+.markdown-source-view.mod-cm6 .cm-attribute {
     color: var(--stillmark-syntax-attribute);
 }
 
+.markdown-source-view.mod-cm6 .cm-def,
 .markdown-source-view.mod-cm6 .cm-builtin,
-.markdown-source-view.mod-cm6 .cm-property,
-.markdown-source-view.mod-cm6 .cm-attribute,
-.markdown-source-view.mod-cm6 .cm-type,
-.markdown-source-view.mod-cm6 .cm-def {
+.markdown-source-view.mod-cm6 .cm-type {
     color: var(--stillmark-syntax-title);
 }
 
@@ -1191,6 +1273,20 @@ a.tag:hover,
 .cm-s-obsidian span.cm-highlight {
     background-color: var(--stillmark-highlight-background);
     color: var(--stillmark-highlight-color);
+}
+
+/* ==========================================================================
+   Tasks: completed items recede with a quiet strike so open work stays
+   scannable in long engineering notes.
+   ========================================================================== */
+
+.markdown-rendered .task-list-item.is-checked,
+.markdown-source-view.mod-cm6 .HyperMD-task-line[data-task="x"],
+.markdown-source-view.mod-cm6 .HyperMD-task-line[data-task="X"] {
+    color: var(--text-faint);
+    text-decoration: line-through;
+    text-decoration-color: color-mix(in srgb, var(--text-faint) 55%, transparent);
+    text-decoration-thickness: 1px;
 }
 
 /* ==========================================================================

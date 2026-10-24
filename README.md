@@ -18,7 +18,9 @@ It carries the same visual language into Obsidian: a white-first light mode, a m
 
 - A white-first light mode with low-saturation neutral chrome, matched by a carefully calibrated dark mode
 - Compact muted-berry inline code that preserves paragraph rhythm
-- Focused code blocks with a flat in-prose panel treatment and a full Prism/CodeMirror syntax palette in the Stillmark berry/blue/violet/amber scheme
+- Focused code blocks with a flat in-prose panel treatment and a full Prism/CodeMirror syntax palette in the Stillmark berry/blue/violet/amber scheme, aligned across both engines
+- A curated monospace font stack with one shared code size in editing and reading views; live-preview code blocks carry the same hairline border; mermaid diagrams share the code panel surface
+- Completed tasks recede with a quiet muted strike-through
 - Links keep the familiar blue underline in both editing and reading views; external links show a quiet globe marker
 - Blockquote styling with a muted berry rule and upright warm-gray text
 - Callouts rendered as low-contrast neutral panels with a 1px hairline border and restrained icon chips
