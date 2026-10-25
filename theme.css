@@ -248,7 +248,7 @@ body {
     --nav-item-color-hover: var(--text-normal);
     --nav-item-color-active: var(--text-normal);
     --nav-item-background-hover: var(--stillmark-shell-hover);
-    --nav-item-background-active: var(--stillmark-shell-hover);
+    --nav-item-background-active: var(--stillmark-accent-soft);
     --nav-item-background-selected: var(--stillmark-accent-soft);
     --nav-item-white-space: pre;
 
@@ -659,9 +659,11 @@ body:not(.is-mobile) .modal {
     display: none;
 }
 
-/* The current note keeps a persistent low-saturation berry highlight. */
+/* The current note keeps a persistent low-saturation berry highlight;
+   --nav-item-background-active carries the same berry so the default
+   hover rule cannot wash it out. */
 .nav-file-title.is-active {
-    background-color: var(--stillmark-accent-soft) !important;
+    background-color: var(--stillmark-accent-soft);
     box-shadow: none;
 }
 
